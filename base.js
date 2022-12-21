@@ -178,9 +178,9 @@
     function unzip(){//TODO
         let imageList = [];
         zip.loadAsync(zip.src).then(function(zip) {
-          console.log('unzip')
+          //console.log('unzip')
           imageList = process_zip(zip);
-          console.log(imageList)
+          //console.log(imageList)
         }).then(console.log('done!'))
       
       
@@ -189,19 +189,19 @@
     async function process_zip(input){
       const zip_array = [];
       //input.forEach((path, entry) => zip_array.push([path, entry]));
-      //console.log(input);
-      for (let i of input.files) {
-        console.log('i')
+      //console.log(input.files);
+      for (let i in input.files) {
+        console.log('FILES PASSED')
         zip_array.push(i);
       }
       for (let i of zip_array) {
-        console.log('cycle')
+        //console.log('cycle')
         await (async (item) => {
-          console.log('cycle2')
+          //console.log('cycle2')
           await each_entry_zip(item[1]);
         })(i);
       }
-      console.log('4');
+      //console.log('4');
       return zip;
     }
     
