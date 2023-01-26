@@ -29,7 +29,7 @@
         reader.onload = handleZip;
         reader.readAsArrayBuffer(event.target.files[0]);
       }
-      if (filename.slice(-3) == 'png'){
+      if (filename.slice(-3) == 'png' || filename.slice(-3) == 'jpg'){//TODO
         console.log('image!')
         isArchive=false;
         reader.onload = handleImg;
@@ -178,7 +178,8 @@
     function unzip(){//TODO
         let imageList = [];
         zip.loadAsync(zip.src).then(function(zip) {
-          //console.log('unzip')
+          console.log('unzip')
+          console.log(zip)
           imageList = process_zip(zip);
           //console.log(imageList)
         }).then(console.log('done!'))
@@ -186,40 +187,43 @@
       
     }
       
-    async function process_zip(input){
-      const zip_array = [];
-      //input.forEach((path, entry) => zip_array.push([path, entry]));
-      //console.log(input.files);
+    function process_zip(input){
       for (let i in input.files) {
-        console.log('FILES PASSED')
-        zip_array.push(i);
-      }
-      for (let i of zip_array) {
+        console.log(i)
+        each_entry_zip(input.files[i])
         //console.log('cycle')
-        await (async (item) => {
-          //console.log('cycle2')
-          await each_entry_zip(item[1]);
-        })(i);
+        /*await (async (item) => {
+          console.log('cycle2')
+          console.log(item)
+          await each_entry_zip(item);
+        })(i);*/
       }
-      //console.log('4');
       return zip;
     }
     
-    async function each_entry_zip(entry){
+    function each_entry_zip(entry){
       console.log('each_entry_zip')
+      console.log(entry)
       entry.async("base64").then((content)=> {
-              let dataURI = "data:image/png;base64," + content;
-              document.getElementById('test').innerHTML = dataURI
+              let dataURI = "data:image/png;base64, " + content;
+              //document.getElementById('test').innerHTML = dataURI
               let imgo = new Image;
+              imgo.name = entry.name;
+              imgo.src = dataURI;
+              document.getElementById('test').innerHTML = dataURI
+              draw(imgo)
               console.log("1");
         
-              imgo.onload = async function(){
-               imgo.name = entry.name;
-               //imageList.push("imgo");
-               console.log("2")
-              }
-              imgo.setAttribute("src", dataURI);
-              console.log("3");
+              
+              //imgo.setAttribute("src", dataURI);
+              imgo.onload = () => {
+                imgo.name = entry.name;
+                //document.getElementById('test').innerHTML = imgo
+                console.log("2")
+                console.log(imgo)
+                //draw(imgo)
+                //imageList.push("imgo");
+               }
             })
     }
       
