@@ -186,41 +186,40 @@
       
     }
       
-    async function process_zip(input){
-      const zip_array = [];
-      //input.forEach((path, entry) => zip_array.push([path, entry]));
-      //console.log(input.files);
-      for (let i in input.files) {
-        console.log('FILES PASSED')
-        zip_array.push(i);
+    function process_zip(input){
+      const zip_array = input.files;
+
+      for (const [key, value] of Object.entries(zip_array)) {
+        console.log(value)
+        each_entry_zip(value)
       }
-      for (let i of zip_array) {
-        //console.log('cycle')
-        await (async (item) => {
-          //console.log('cycle2')
-          await each_entry_zip(item[1]);
-        })(i);
-      }
-      //console.log('4');
       return zip;
     }
     
     async function each_entry_zip(entry){
       console.log('each_entry_zip')
-      entry.async("base64").then((content)=> {
-              let dataURI = "data:image/png;base64," + content;
-              document.getElementById('test').innerHTML = dataURI
-              let imgo = new Image;
-              console.log("1");
-        
-              imgo.onload = async function(){
-               imgo.name = entry.name;
-               //imageList.push("imgo");
-               console.log("2")
-              }
-              imgo.setAttribute("src", dataURI);
-              console.log("3");
-            })
+      let content = await entry.async("base64")
+      let dataURI = "data:image/png;base64," + content;
+      document.getElementById('test').innerHTML = dataURI
+      let imgo = new Image();
+      console.log("1");
+
+      imgo.onload = function(){
+        imgo.name = entry.name;
+        console.log("2")
+        crop(imgo)
+        draw(imgo)
+        img.name = imgo.name
+        pngDownload();
+      }
+
+      imgo.setAttribute("src", dataURI);
+
+
+      console.log("3");
+            
     }
+
+  }
       
-      })();
+      )();
