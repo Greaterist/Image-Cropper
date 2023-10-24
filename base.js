@@ -190,9 +190,17 @@
       const zip_array = input.files;
 
       for (const [key, value] of Object.entries(zip_array)) {
-        console.log(value)
-        each_entry_zip(value)
+        console.log(typeof(value.name) )
+        //each_entry_zip(value)
+        input.file(value.name, each_entry_zip(value))
       }
+
+
+      input.generateAsync({type:"blob"}).then(function (blob) { // 1) generate the zip file
+        saveAs(blob, "hello.zip");                          // 2) trigger the download
+    }, function (err) {
+        jQuery("#blob").text(err);
+    });
       return zip;
     }
     
@@ -202,23 +210,50 @@
       let dataURI = "data:image/png;base64," + content;
       document.getElementById('test').innerHTML = dataURI
       let imgo = new Image();
-      console.log("1");
 
-      imgo.onload = function(){
-        imgo.name = entry.name;
-        console.log("2")
-        crop(imgo)
-        draw(imgo)
-        img.name = imgo.name
-        pngDownload();
-      }
-
-      imgo.setAttribute("src", dataURI);
-
-
-      console.log("3");
+      imgo = await addImageProcess(dataURI)
+      imgo.name = entry.name;
+      crop(imgo)
+      draw(imgo)
+      img.name = imgo.name
+      console.log(canvas.toDataURL())
+      return dataURItoBlob(canvas.toDataURL())
+      pngDownload();
             
     }
+
+    function addImageProcess(src){
+      return new Promise((resolve, reject) => {
+        let img = new Image()
+        img.onload = () =>{
+          console.log("2")
+          resolve(img)
+        } 
+        img.onerror = reject
+        img.src = src
+      })
+    }
+
+    function dataURItoBlob( dataURI ) {
+      // Convert Base64 to raw binary data held in a string.
+  
+      var byteString = atob(dataURI.split(',')[1]);
+  
+      // Separate the MIME component.
+      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  
+      // Write the bytes of the string to an ArrayBuffer.
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+      }
+  
+      // Write the ArrayBuffer to a BLOB and you're done.
+      var bb = new Blob([ab]);
+  
+      return bb;
+  }
 
   }
       
