@@ -19,20 +19,21 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">ImageCropper</a>
       </nav>
-      
-      <input type="checkbox" class="btn-check" id="archive" autocomplete="off">
-      <label class="btn btn-outline-primary" for="archive">Archive</label><br>
-      <p id="test">test</p>
+
       <form id="form">
-        <input id="file" type="file" name="files[]" multiple/><br>
-        <input id="width" type="number" placeholder="width" />
-        :
-        <input id="height" type="number" placeholder="height" /><br>
-        <input id='submit' type='button' value='format'/>
+        <input id="file" type="file" name="files[]" multiple class="form-control form-control-lg"/>
+        <div class="input-group w-25 p-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="">Enter ratio:</span>
+          </div>
+          <input type="text" id="width" class="form-control" placeholder="16">
+          <input type="text" id="height" class="form-control" placeholder="9">
+        </div>
+        <input id='submit' type='button' class="btn btn-primary m-3 p-3" value='format'/>
       </form>
       
       <canvas id="mycanvas"></canvas>
-      <script type="module" src="./util.js"></script>
+
       <script type="module" src="./base.js"></script>
 </body>
 

@@ -3,13 +3,12 @@ export function addImageSRC(src){
     return new Promise((resolve, reject) => {
       let img = new Image()
       img.onload = () =>{
-        console.log("2")
         resolve(img)
       } 
       img.onerror = reject
       img.src = src
     })
-  }
+}
 
 
 export function dataURItoBlob( dataURI ) {
@@ -31,4 +30,30 @@ export function dataURItoBlob( dataURI ) {
     var bb = new Blob([ab]);
 
     return bb;
+}
+
+
+export function ifSupportedImage(filename){
+  switch (filename.slice(-3).toLowerCase()) {
+    case 'png':
+    case 'jpg':
+      return true
+      break;
+  
+    default:
+      return false
+      break;
+  }
+}
+
+export function ifSupportedArchive(filename){
+  switch (filename.slice(-3).toLowerCase()) {
+    case 'zip':
+      return true
+      break;
+  
+    default:
+      return false
+      break;
+  }
 }
